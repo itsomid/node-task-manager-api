@@ -16,10 +16,14 @@ router.post('/tasks', auth, async (req, res) => {
     }
 })
 
-router.get('/tasks', async (req, res) => {
+router.get('/tasks', auth, async (req, res) => {
     try {
-        const tasks = await Task.find()
+        const tasks = await Task.find({ owner: req.user._id })
         res.send(tasks)
+        
+        //Second Way
+        // await req.user.populate('tasks')
+        // res.send(req.user.tasks)
     } catch (e) {
         res.status(500).send(e)
     }
