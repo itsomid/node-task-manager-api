@@ -54,7 +54,9 @@ const userSchema = new mongoose.Schema({
             required: true
         }
     }],
-
+    avatar:{
+        type: Buffer
+    }
 },{
     timestamps: true
 })
@@ -101,7 +103,6 @@ userSchema.statics.findByCredentials = async (email, password) => {
     if(!isMatch){
         throw new Error('Unable to login!')
     }
-
     return user 
 }
 
