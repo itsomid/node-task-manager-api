@@ -27,14 +27,17 @@ test('Should convert 0 C to 32 F', () => {
 //     }, 1000)
 // })
 
-test('should add two number', (done) => {
-    add(2, 4).then((sum) => {
-        expect(sum).toBe(6)
-        done()
-    })
-})
+// test('should add two number', (done) => {
+//     add(2, 4).then((sum) => {
+//         expect(sum).toBe(6)
+//         done()
+//     }).catch(()=>{
+//         console.log('error')
+//     })
+// })
 
-test('should add two number async/await', async () => {
-    const sum = await add(2, 5)
-    expect(sum).toBe(7)
-})  
+
+// test('should add two number async/await', async () => {
+//     const sum = await add(2, 5)
+//     expect(sum).toBe(7)
+// })  
