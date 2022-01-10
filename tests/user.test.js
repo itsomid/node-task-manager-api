@@ -27,7 +27,6 @@ test('Should signup new user', async () => {
         email: 'o.shabani@hotmail.com',
         password: 'Red123!'
     }).expect(201)
-    // console.log(response.body);
 
     //Assertion that database was changed correctly
     const user = await User.findById(response.body.user._id)
@@ -47,10 +46,14 @@ test('Should signup new user', async () => {
 })
 
 test('Should login existing user', async () => {
-    await request(app).post('/users/login').send({
+    const response = await request(app).post('/users/login').send({
         email: sampleUser.email,
-        password: 'Red123!!'
+        password: sampleUser.password
     }).expect(200)
+
+    // validate new token is saved
+    const user = await User.findById(sampleUserId)
+    expect(response.body.token).toBe(user.tokens[1].token)
 })
 
 test('should not login nonexistent user', async () => {
@@ -67,6 +70,8 @@ test('should get profile for user', async () => {
         .set('Authorization', `Bearer ${sampleUser.tokens[0].token}`)
         .send()
         .expect(200)
+
+
 })
 
 test('should not get profile for unuthenticated user', async () => {
@@ -84,6 +89,7 @@ test('should delete account for user', async () => {
         .set('Authorization', `Bearer ${sampleUser.tokens[0].token}`)
         .send()
         .expect(200)
+
 })
 
 
