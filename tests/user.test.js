@@ -22,11 +22,27 @@ beforeEach(async () => {
 
 
 test('Should signup new user', async () => {
-    await request(app).post('/users').send({
+    const response = await request(app).post('/users').send({
         name: 'Omid',
         email: 'o.shabani@hotmail.com',
         password: 'Red123!'
     }).expect(201)
+    // console.log(response.body);
+
+    //Assertion that database was changed correctly
+    const user = await User.findById(response.body.user._id)
+    expect(user).not.toBeNull()
+
+    //Assertion about the response
+    expect(response.body).toMatchObject({
+        user:{
+            name: 'Omid',
+            email: 'o.shabani@hotmail.com',
+        },
+        token: user.tokens[0].token
+    })
+
+  
 })
 
 test('Should login existing user', async () => {
