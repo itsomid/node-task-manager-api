@@ -45,7 +45,6 @@ test('should not login nonexistent user', async () => {
 
 
 test('should get profile for user', async () => {
-
     await request(app)
         .get('/users/me')
         .set('Authorization', `Bearer ${sampleUser.tokens[0].token}`)
@@ -55,9 +54,10 @@ test('should get profile for user', async () => {
 
 test('should not get profile for unuthenticated user', async () => {
     await request(app)
-    .get('/users/me')
-    .set('Authorization', `Bearer 123`)
-    .send()
-    .expect(401)
+        .get('/users/me')
+        .set('Authorization', `Bearer 123`)
+        .send()
+        .expect(401)
 })
+
 
