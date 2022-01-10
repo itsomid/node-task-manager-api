@@ -84,12 +84,15 @@ test('should not get profile for unuthenticated user', async () => {
 
 test('should delete account for user', async () => {
 
-    await request(app)
+   await request(app)
         .delete('/users/me')
         .set('Authorization', `Bearer ${sampleUser.tokens[0].token}`)
         .send()
         .expect(200)
 
+    // validate user is removed
+    const user = await User.findById(sampleUserId)
+    expect(user).toBeNull()
 })
 
 
