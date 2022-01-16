@@ -3,6 +3,7 @@ const app = require('../src/app')
 const jwt = require('jsonwebtoken')
 const mongoose = require('mongoose')
 const User = require('../src/models/user')
+const req = require('express/lib/request')
 
 const sampleUserId = new mongoose.Types.ObjectId
 sampleUser = {
@@ -22,11 +23,14 @@ beforeEach(async () => {
 
 
 test('Should signup new user', async () => {
-    const response = await request(app).post('/users').send({
+    const response = await request(app)
+    .post('/users')
+    .send({
         name: 'Omid',
         email: 'o.shabani@hotmail.com',
         password: 'Red123!'
-    }).expect(201)
+    })
+    .expect(201)
 
     //Assertion that database was changed correctly
     const user = await User.findById(response.body.user._id)
@@ -34,7 +38,7 @@ test('Should signup new user', async () => {
 
     //Assertion about the response
     expect(response.body).toMatchObject({
-        user:{
+        user: {
             name: 'Omid',
             email: 'o.shabani@hotmail.com',
         },
@@ -46,7 +50,9 @@ test('Should signup new user', async () => {
 })
 
 test('Should login existing user', async () => {
-    const response = await request(app).post('/users/login').send({
+    const response = await request(app)
+    .post('/users/login')
+    .send({
         email: sampleUser.email,
         password: sampleUser.password
     }).expect(200)
@@ -84,7 +90,7 @@ test('should not get profile for unuthenticated user', async () => {
 
 test('should delete account for user', async () => {
 
-   await request(app)
+    await request(app)
         .delete('/users/me')
         .set('Authorization', `Bearer ${sampleUser.tokens[0].token}`)
         .send()
@@ -103,11 +109,26 @@ test('should not delete account for unuthenticated user', async () => {
         .expect(401)
 })
 
-test('Should upload avatar image',async ()=>{
+test('Should upload avatar image', async () => {
     await request(app)
         .post('/users/me/avatar')
         .set('Authorization', `Bearer ${sampleUser.tokens[0].token}`)
-        .attach('avatar','tests/fixtures/profile-pic.jpg')
+        .attach('avatar', 'tests/fixtures/profile-pic.jpg')
         .expect(200)
 
+})
+
+test('should update valid user fields', async () => {
+    await request(app)
+    .patch('/users/me')
+    .set('Authorization', `Bearer ${sampleUser.tokens[0].token}`)
+    .send({
+        name: "Omid",
+        age: 30,
+    })
+    .expect(200)
+
+    const user = await User.findById(sampleUserId)
+    expect(user.name).toEqual('Omid')
+    
 })
