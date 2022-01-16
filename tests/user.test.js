@@ -132,3 +132,13 @@ test('should update valid user fields', async () => {
     expect(user.name).toEqual('Omid')
     
 })
+
+test('should not update invalid user fields', async () => {
+    await request(app)
+    .patch('/users/me')
+    .set('Authorization', `Bearer ${sampleUser.tokens[0].token}`)
+    .send({
+        location: "Omid",
+    })
+    .expect(400)
+})
