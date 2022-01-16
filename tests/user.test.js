@@ -102,3 +102,12 @@ test('should not delete account for unuthenticated user', async () => {
         .send()
         .expect(401)
 })
+
+test('Should upload avatar image',async ()=>{
+    await request(app)
+        .post('/users/me/avatar')
+        .set('Authorization', `Bearer ${sampleUser.tokens[0].token}`)
+        .attach('avatar','tests/fixtures/profile-pic.jpg')
+        .expect(200)
+
+})
